@@ -1,6 +1,7 @@
 package ru.kravchenko.servlet.dto;
 
 import ru.kravchenko.model.Comment;
+import ru.kravchenko.model.Tag;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +14,7 @@ public abstract class NewsDto {
     private LocalDateTime dateTime;
     private String text;
     private List<Comment> commentList;
+    private List<Tag> tagList;
 
     public Long getId() {
         return id;
@@ -60,5 +62,13 @@ public abstract class NewsDto {
 
     public void setCommentList(List<Comment> commentList) {
         this.commentList = commentList;
+    }
+
+    public List<Tag> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(List<Tag> tagList) {
+        this.tagList = tagList;
     }
 }

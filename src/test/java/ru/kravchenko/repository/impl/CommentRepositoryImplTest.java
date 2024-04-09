@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.kravchenko.exception.ExecuteQueryException;
+import ru.kravchenko.exception.ModelMappingException;
 import ru.kravchenko.model.Comment;
 import ru.kravchenko.repository.CommentRepository;
 
@@ -102,5 +104,21 @@ class CommentRepositoryImplTest {
         commentList = repository.findAll(1L);
         Assertions.assertEquals(1, commentList.size());
         Assertions.assertFalse(repository.findOne(1L).isPresent());
+    }
+
+    @Test
+    void executeQueryExceptionTest() {
+        Assertions.assertThrows(ExecuteQueryException.class,
+                () -> {
+                    throw new ExecuteQueryException(this.getClass(), new RuntimeException());
+                });
+    }
+
+    @Test
+    void modelMappingExceptionTest() {
+        Assertions.assertThrows(ModelMappingException.class,
+                () -> {
+                    throw new ModelMappingException(this.getClass());
+                });
     }
 }

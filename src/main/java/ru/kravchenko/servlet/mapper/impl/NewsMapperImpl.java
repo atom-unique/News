@@ -19,6 +19,7 @@ public class NewsMapperImpl implements NewsMapper {
         target.setDateTime(source.getDateTime());
         target.setText(source.getText());
         target.setCommentList(source.getCommentList());
+        target.setTagList(source.getTagList());
         return target;
     }
 
@@ -34,6 +35,7 @@ public class NewsMapperImpl implements NewsMapper {
         target.setDateTime(source.getDateTime());
         target.setText(source.getText());
         target.setCommentList(source.getCommentList());
+        target.setTagList(source.getTagList());
         return target;
     }
 }

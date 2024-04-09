@@ -10,6 +10,9 @@ import org.mockito.Mock;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.kravchenko.exception.EntityCreateException;
+import ru.kravchenko.exception.EntityNotFoundException;
+import ru.kravchenko.exception.EntityUpdateException;
 import ru.kravchenko.model.Comment;
 import ru.kravchenko.service.CommentService;
 
@@ -81,6 +84,30 @@ class CommentServiceImplTest {
         commentService.saveComment(comment);
         commentList = commentService.findAllComment(1L);
         assertEquals(3, commentList.size());
+    }
+
+    @Test
+    void entityCreateExceptionTest() {
+        Assertions.assertThrows(EntityCreateException.class,
+                () -> {
+                    throw new EntityCreateException(this.getClass());
+                });
+    }
+
+    @Test
+    void entityNotFoundExceptionTest() {
+        Assertions.assertThrows(EntityNotFoundException.class,
+                () -> {
+                    throw new EntityNotFoundException(this.getClass(), 1L);
+                });
+    }
+
+    @Test
+    void entityUpdateExceptionTest() {
+        Assertions.assertThrows(EntityUpdateException.class,
+                () -> {
+                    throw new EntityUpdateException(this.getClass());
+                });
     }
 
     @Test

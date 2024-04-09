@@ -37,3 +37,39 @@ VALUES (1, 1, 'автор 100', '2024-03-26 23:05:25', 'текст 100'),
        (2, 1, 'автор 200', '2024-03-26 23:05:53', 'текст 200'),
        (3, 2, 'автор 300', '2024-03-26 23:05:57', 'текст 300'),
        (4, 2, 'автор 400', '2024-03-26 23:54:31', 'текст 400');
+
+CREATE TABLE `tag`
+(
+    `id`   bigint                                  NOT NULL AUTO_INCREMENT,
+    `name` varchar(100) COLLATE utf8mb3_unicode_ci NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 5
+  DEFAULT CHARSET = utf8mb3
+  COLLATE = utf8mb3_unicode_ci;
+
+INSERT INTO `tag` (`id`, `name`)
+VALUES (1, 'Наука'),
+       (2, 'Техника'),
+       (3, 'Технологии'),
+       (4, 'Политика');
+
+CREATE TABLE `news_tag`
+(
+    `news_id` bigint NOT NULL,
+    `tag_id`  bigint NOT NULL,
+    KEY `news_id` (`news_id`),
+    KEY `tag_id` (`tag_id`),
+    CONSTRAINT `news_tag_ibfk_1` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`),
+    CONSTRAINT `news_tag_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`),
+    UNIQUE (news_id, tag_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb3
+  COLLATE = utf8mb3_unicode_ci;
+
+INSERT INTO `news_tag` (`news_id`, `tag_id`)
+VALUES (1, 1),
+       (1, 2),
+       (2, 3),
+       (4, 4);
+

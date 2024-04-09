@@ -7,4 +7,6 @@ import java.util.List;
 public interface NewsRepository extends CommonRepository<News> {
 
     List<News> findAll();
+
+    List<News> findAllByTagId(Long id);
 }

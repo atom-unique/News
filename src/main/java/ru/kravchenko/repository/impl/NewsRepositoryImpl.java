@@ -4,6 +4,7 @@ import ru.kravchenko.connection.DataSource;
 import ru.kravchenko.exception.ExecuteQueryException;
 import ru.kravchenko.exception.ModelMappingException;
 import ru.kravchenko.model.News;
+import ru.kravchenko.repository.CommentRepository;
 import ru.kravchenko.repository.NewsRepository;
 import ru.kravchenko.repository.mapper.NewsMapper;
 import ru.kravchenko.repository.mapper.impl.NewsMapperImpl;
@@ -23,9 +24,11 @@ public class NewsRepositoryImpl implements NewsRepository {
 
     private static final String FIND_ONE = "SELECT id, title, author, date_time, text FROM news WHERE id = ?";
     private static final String FIND_ALL = "SELECT id, title, author, date_time, text FROM news";
+    private static final String FIND_ALL_BY_TAG_ID = "SELECT id, title, author, date_time, text FROM news n INNER JOIN news_tag nt ON n.id=nt.news_id WHERE tag_id = ?";
     private static final String CREATE = "INSERT INTO news (title, author, date_time, text) VALUES (?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE news SET title = ?, author = ?, date_time = ?, text = ? WHERE id = ?";
     private static final String REMOVE = "DELETE FROM news WHERE id = ?";
+    private final CommentRepository commentRepository;
     private final NewsMapper newsMapper;
     private final Connection connection;
     private final Class<?> thisClass;
@@ -36,6 +39,7 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     public NewsRepositoryImpl(Connection connection) {
+        this.commentRepository = new CommentRepositoryImpl();
         this.connection = connection;
         this.newsMapper = new NewsMapperImpl();
         thisClass = this.getClass();
@@ -59,6 +63,36 @@ public class NewsRepositoryImpl implements NewsRepository {
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(FIND_ALL);) {
             return buildNews(resultSet);
+        } catch (SQLException exception) {
+            throw new ExecuteQueryException(thisClass, exception);
+        }
+    }
+
+    @Override
+    public List<News> findAllByTagId(Long id) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_TAG_ID)) {
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<News> newsList = new ArrayList<>();
+            try {
+                while (resultSet.next()) {
+                    News news = new News();
+                    try {
+                        news.setId(resultSet.getLong("id"));
+                        news.setTitle(resultSet.getString("title"));
+                        news.setAuthor(resultSet.getString("author"));
+                        news.setDateTime(resultSet.getTimestamp("date_time").toLocalDateTime());
+                        news.setText(resultSet.getString("text"));
+                        news.setCommentList(commentRepository.findAll(news.getId()));
+                    } catch (SQLException exception) {
+                        throw new ModelMappingException(modelClass);
+                    }
+                    newsList.add(news);
+                }
+                return newsList;
+            } catch (SQLException exception) {
+                throw new ModelMappingException(modelClass);
+            }
         } catch (SQLException exception) {
             throw new ExecuteQueryException(thisClass, exception);
         }

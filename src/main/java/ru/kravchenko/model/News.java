@@ -12,9 +12,11 @@ public class News {
     private LocalDateTime dateTime;
     private String text;
     private List<Comment> commentList;
+    private List<Tag> tagList;
 
     public News() {
         this.commentList = new ArrayList<>();
+        this.tagList = new ArrayList<>();
     }
 
     public Long getId() {
@@ -63,5 +65,13 @@ public class News {
 
     public void setCommentList(List<Comment> commentList) {
         this.commentList = commentList;
+    }
+
+    public List<Tag> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(List<Tag> tagList) {
+        this.tagList = tagList;
     }
 }

@@ -9,6 +9,7 @@ import ru.kravchenko.servlet.dto.OutGoingNewsDto;
 import ru.kravchenko.servlet.mapper.NewsMapper;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 class NewsMapperImplTest {
 
@@ -23,6 +24,8 @@ class NewsMapperImplTest {
         LocalDateTime dateTime = LocalDateTime.now();
         news.setDateTime(dateTime);
         news.setText("Текст");
+        news.setCommentList(new ArrayList<>());
+        news.setTagList(new ArrayList<>());
         OutGoingNewsDto dto = newsMapper.map(news);
         Assertions.assertEquals("Заголовок", dto.getTitle());
         Assertions.assertEquals("Автор", dto.getAuthor());
@@ -38,6 +41,8 @@ class NewsMapperImplTest {
         LocalDateTime dateTime = LocalDateTime.now();
         dto.setDateTime(dateTime);
         dto.setText("Текст");
+        dto.setCommentList(new ArrayList<>());
+        dto.setTagList(new ArrayList<>());
         News news = newsMapper.map(dto);
         Assertions.assertEquals("Заголовок", news.getTitle());
         Assertions.assertEquals("Автор", news.getAuthor());
