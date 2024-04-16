@@ -6,6 +6,7 @@ import ru.kravchenko.exception.ModelMappingException;
 import ru.kravchenko.model.News;
 import ru.kravchenko.repository.CommentRepository;
 import ru.kravchenko.repository.NewsRepository;
+import ru.kravchenko.repository.TagRepository;
 import ru.kravchenko.repository.mapper.NewsMapper;
 import ru.kravchenko.repository.mapper.impl.NewsMapperImpl;
 
@@ -29,6 +30,7 @@ public class NewsRepositoryImpl implements NewsRepository {
     private static final String UPDATE = "UPDATE news SET title = ?, author = ?, date_time = ?, text = ? WHERE id = ?";
     private static final String REMOVE = "DELETE FROM news WHERE id = ?";
     private final CommentRepository commentRepository;
+    private final TagRepository tagRepository = new TagRepositoryImpl();
     private final NewsMapper newsMapper;
     private final Connection connection;
     private final Class<?> thisClass;
@@ -142,7 +144,9 @@ public class NewsRepositoryImpl implements NewsRepository {
         List<News> target = new ArrayList<>();
         try {
             while (resultSet.next()) {
-                target.add(newsMapper.map(resultSet));
+                News news = newsMapper.map(resultSet);
+                news.setTagList(tagRepository.findAll(news.getId()));
+                target.add(news);
             }
             return target;
         } catch (SQLException exception) {

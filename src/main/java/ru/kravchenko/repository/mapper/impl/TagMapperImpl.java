@@ -13,16 +13,16 @@ import java.sql.SQLException;
 public class TagMapperImpl implements TagMapper {
 
 
-    private final NewsRepository newsRepository;
+//    private final NewsRepository newsRepository;
     private final Class<?> modelClass;
 
     public TagMapperImpl() {
-        this.newsRepository = new NewsRepositoryImpl();
+//        this.newsRepository = new NewsRepositoryImpl();
         modelClass = Tag.class;
     }
 
     public TagMapperImpl(Connection connection) {
-        this.newsRepository = new NewsRepositoryImpl(connection);
+//        this.newsRepository = new NewsRepositoryImpl(connection);
         this.modelClass = Tag.class;
     }
 
@@ -32,7 +32,7 @@ public class TagMapperImpl implements TagMapper {
         try {
             tag.setId(resultSet.getLong("id"));
             tag.setName(resultSet.getString("name"));
-            tag.setNewsList(newsRepository.findAllByTagId(tag.getId()));
+//            tag.setNewsList(newsRepository.findAllByTagId(tag.getId()));
         } catch (SQLException exception) {
             throw new ModelMappingException(modelClass);
         }

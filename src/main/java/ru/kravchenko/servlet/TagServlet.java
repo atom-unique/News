@@ -12,6 +12,7 @@ import ru.kravchenko.model.Tag;
 import ru.kravchenko.service.TagService;
 import ru.kravchenko.service.impl.TagServiceImpl;
 import ru.kravchenko.servlet.adapter.LocalDateTimeAdapter;
+import ru.kravchenko.servlet.dto.IncomingTagDto;
 import ru.kravchenko.servlet.dto.OutGoingTagDto;
 import ru.kravchenko.servlet.mapper.TagMapper;
 import ru.kravchenko.servlet.mapper.impl.TagMapperImpl;
@@ -19,6 +20,7 @@ import ru.kravchenko.servlet.mapper.impl.TagMapperImpl;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.util.Scanner;
 
 @WebServlet(value = "/tag")
 public class TagServlet extends HttpServlet {
@@ -71,12 +73,31 @@ public class TagServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String json = "";
+        if (req.getParameter("action").equals("put")) {
+            Scanner scanner = new Scanner(req.getInputStream(), "UTF-8");
+            if (scanner.useDelimiter("\\A").hasNext()) {
+                json = scanner.useDelimiter("\\A").next();
+            }
+            scanner.close();
+        } else {
+            try {
+                resp.sendRedirect("/");
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
+            }
+        }
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create();
+        IncomingTagDto tagDto = gson.fromJson(json, IncomingTagDto.class);
+        Tag tag = tagMapper.map(tagDto);
+        tagService.saveTag(tag);
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         if (req.getParameter("action").equals("delete")) {
             Long id = Long.parseLong(req.getParameter("id"));
             tagService.removeTag(id);

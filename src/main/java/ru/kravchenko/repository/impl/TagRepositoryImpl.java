@@ -81,12 +81,10 @@ public class TagRepositoryImpl implements TagRepository {
             List<Tag> tagList = new ArrayList<>();
             try {
                 while (resultSet.next()) {
-
                     Tag tag = new Tag();
                     try {
                         tag.setId(resultSet.getLong("id"));
                         tag.setName(resultSet.getString("name"));
-
                     } catch (SQLException exception) {
                         throw new ModelMappingException(modelClass);
                     }
