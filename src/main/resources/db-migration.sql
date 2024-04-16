@@ -60,8 +60,8 @@ CREATE TABLE `news_tag`
     `tag_id`  bigint NOT NULL,
     KEY `news_id` (`news_id`),
     KEY `tag_id` (`tag_id`),
-    CONSTRAINT `news_tag_ibfk_1` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`),
-    CONSTRAINT `news_tag_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`),
+    CONSTRAINT `news_tag_ibfk_1` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `news_tag_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE CASCADE,
     UNIQUE (news_id, tag_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb3
@@ -71,5 +71,6 @@ INSERT INTO `news_tag` (`news_id`, `tag_id`)
 VALUES (1, 1),
        (1, 2),
        (2, 3),
+       (3, 1),
        (4, 4);
 
