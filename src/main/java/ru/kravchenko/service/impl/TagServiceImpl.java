@@ -8,7 +8,6 @@ import ru.kravchenko.repository.impl.TagRepositoryImpl;
 import ru.kravchenko.service.TagService;
 
 import java.sql.Connection;
-import java.util.List;
 
 public class TagServiceImpl implements TagService {
 
@@ -30,12 +29,6 @@ public class TagServiceImpl implements TagService {
         return tagRepository.findOne(id).orElseThrow(
                 () -> new EntityNotFoundException(modelClass, id)
         );
-    }
-
-    @Override
-    public List<Tag> findAllTags(Long id) {
-        List<Tag> tagList = tagRepository.findAll(id);
-        return tagList.isEmpty() ? List.of() : tagList;
     }
 
     @Override

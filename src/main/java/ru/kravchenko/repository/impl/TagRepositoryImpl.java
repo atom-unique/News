@@ -3,7 +3,9 @@ package ru.kravchenko.repository.impl;
 import ru.kravchenko.connection.DataSource;
 import ru.kravchenko.exception.ExecuteQueryException;
 import ru.kravchenko.exception.ModelMappingException;
+import ru.kravchenko.model.News;
 import ru.kravchenko.model.Tag;
+import ru.kravchenko.repository.CommentRepository;
 import ru.kravchenko.repository.TagRepository;
 import ru.kravchenko.repository.mapper.TagMapper;
 import ru.kravchenko.repository.mapper.impl.TagMapperImpl;
@@ -20,9 +22,10 @@ import java.util.Optional;
 public class TagRepositoryImpl implements TagRepository {
 
     private static final String FIND_ONE = "SELECT id, name FROM tag WHERE id = ?";
-    private static final String FIND_ALL_BY_NEWS_ID = "SELECT id, name FROM tag t INNER JOIN news_tag nt ON t.id=nt.tag_id WHERE news_id = ?";
+    private static final String FIND_ALL_BY_TAG_ID = "SELECT id, title, author, date_time, text FROM news n INNER JOIN news_tag nt ON n.id=nt.news_id WHERE tag_id = ?";
     private static final String CREATE = "INSERT INTO tag (name) VALUES (?)";
     private static final String REMOVE = "DELETE FROM tag WHERE id = ?";
+    private final CommentRepository commentRepository;
     private final TagMapper tagMapper;
     private final Connection connection;
     private final Class<?> thisClass;
@@ -34,6 +37,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     public TagRepositoryImpl(Connection connection) {
         this.tagMapper = new TagMapperImpl();
+        this.commentRepository = new CommentRepositoryImpl();
         this.connection = connection;
         thisClass = this.getClass();
         modelClass = Tag.class;
@@ -73,24 +77,27 @@ public class TagRepositoryImpl implements TagRepository {
         }
     }
 
-    @Override
-    public List<Tag> findAll(Long id) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_NEWS_ID)) {
+    public List<News> findAllNewsByTagId(Long id) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_TAG_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Tag> tagList = new ArrayList<>();
+            List<News> newsList = new ArrayList<>();
             try {
                 while (resultSet.next()) {
-                    Tag tag = new Tag();
+                    News news = new News();
                     try {
-                        tag.setId(resultSet.getLong("id"));
-                        tag.setName(resultSet.getString("name"));
+                        news.setId(resultSet.getLong("id"));
+                        news.setTitle(resultSet.getString("title"));
+                        news.setAuthor(resultSet.getString("author"));
+                        news.setDateTime(resultSet.getTimestamp("date_time").toLocalDateTime());
+                        news.setText(resultSet.getString("text"));
+                        news.setCommentList(commentRepository.findAll(news.getId()));
                     } catch (SQLException exception) {
                         throw new ModelMappingException(modelClass);
                     }
-                    tagList.add(tag);
+                    newsList.add(news);
                 }
-                return tagList;
+                return newsList;
             } catch (SQLException exception) {
                 throw new ModelMappingException(modelClass);
             }
@@ -103,7 +110,9 @@ public class TagRepositoryImpl implements TagRepository {
         List<Tag> target = new ArrayList<>();
         try {
             while (resultSet.next()) {
-                target.add(tagMapper.map(resultSet));
+                Tag tag = tagMapper.map(resultSet);
+                tag.setNewsList(findAllNewsByTagId(tag.getId()));
+                target.add(tag);
             }
             return target;
         } catch (SQLException exception) {
