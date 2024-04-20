@@ -64,7 +64,6 @@ class NewsServiceImplTest {
     }
 
     @Test
-    @Disabled("run separately")
     void findAllNewsTest() {
         List<News> newsList = newsService.findAllNews();
         Assertions.assertEquals(4, newsList.size());
@@ -83,10 +82,10 @@ class NewsServiceImplTest {
         newsService.saveNews(news);
         newsList = newsService.findAllNews();
         assertEquals(5, newsList.size());
+        newsService.removeNews(5L);
     }
 
     @Test
-    @Disabled("run separately")
     void saveNewsTestExistingNews() {
         List<News> newsList = newsService.findAllNews();
         assertEquals(4, newsList.size());
@@ -105,7 +104,6 @@ class NewsServiceImplTest {
     }
 
     @Test
-    @Disabled("run separately")
     void removeNewsTest() {
         List<News> newsList = newsService.findAllNews();
         assertEquals(4, newsList.size());

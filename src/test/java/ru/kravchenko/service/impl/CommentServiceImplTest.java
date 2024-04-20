@@ -60,9 +60,9 @@ class CommentServiceImplTest {
 
     @Test
     void findByIdTest() {
-        Comment comment = commentService.findById(1L);
-        Assertions.assertEquals("автор 100", comment.getAuthor());
-        Assertions.assertEquals("текст 100", comment.getText());
+        Comment comment = commentService.findById(4L);
+        Assertions.assertEquals("автор 400", comment.getAuthor());
+        Assertions.assertEquals("текст 400", comment.getText());
     }
 
     @Test
@@ -84,6 +84,7 @@ class CommentServiceImplTest {
         commentService.saveComment(comment);
         commentList = commentService.findAllComment(1L);
         assertEquals(3, commentList.size());
+        commentService.removeComment(5L);
     }
 
     @Test
@@ -111,21 +112,19 @@ class CommentServiceImplTest {
     }
 
     @Test
-    @Disabled("run separately")
     void saveCommentTestExistingComment() {
-        List<Comment> commentList = commentService.findAllComment(1L);
+        List<Comment> commentList = commentService.findAllComment(2L);
         assertEquals(2, commentList.size());
-        Comment comment = commentService.findById(1L);
-        assertEquals("текст 100", commentService.findById(1L).getText());
-        comment.setText("текст 1000");
+        Comment comment = commentService.findById(2L);
+        assertEquals("текст 200", commentService.findById(2L).getText());
+        comment.setText("текст 2000");
         commentService.saveComment(comment);
-        commentList = commentService.findAllComment(1L);
+        commentList = commentService.findAllComment(2L);
         assertEquals(2, commentList.size());
-        assertEquals("текст 1000", commentService.findById(1L).getText());
+        assertEquals("текст 2000", commentService.findById(2L).getText());
     }
 
     @Test
-    @Disabled("run separately")
     void removeCommentTest() {
         List<Comment> commentList = commentService.findAllComment(1L);
         assertEquals(2, commentList.size());
