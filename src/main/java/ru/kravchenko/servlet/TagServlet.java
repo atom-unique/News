@@ -42,7 +42,7 @@ public class TagServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         if (req.getParameter("action").equals("get")) {
             Long id = Long.parseLong(req.getParameter("id"));
             Tag tag = tagService.findById(id);
