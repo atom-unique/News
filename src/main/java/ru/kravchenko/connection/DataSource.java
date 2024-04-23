@@ -8,18 +8,19 @@ import java.sql.SQLException;
 
 public class DataSource {
 
-    private static final String APP_CONF = "/datasource.properties";
-    private static HikariConfig config = new HikariConfig(APP_CONF);
-    private static HikariDataSource dataSource;
+    private final String APP_CONF = "/datasource.properties";
+    private HikariConfig config = new HikariConfig(APP_CONF);
+    private HikariDataSource dataSource;
 
-    static {
-        dataSource = new HikariDataSource(config);
+    public DataSource() {
+        this.dataSource = new HikariDataSource(config);
     }
 
-    private DataSource() {
+    private DataSource(HikariConfig config) {
+        this.dataSource = new HikariDataSource(config);
     }
 
-    public static Connection getConnection(){
+    public Connection getConnection() {
         try {
             return dataSource.getConnection();
         } catch (SQLException exception) {
