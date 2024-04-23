@@ -11,8 +11,6 @@ import ru.kravchenko.servlet.mapper.TagMapper;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class TagMapperImplTest extends CommentDto {
 
     @Mock

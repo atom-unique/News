@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.kravchenko.servlet.dto.CommentDto;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class ExecuteQueryExceptionTest extends CommentDto {
 
     @Test

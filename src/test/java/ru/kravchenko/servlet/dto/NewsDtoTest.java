@@ -6,7 +6,6 @@ import ru.kravchenko.model.Comment;
 import ru.kravchenko.model.Tag;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
