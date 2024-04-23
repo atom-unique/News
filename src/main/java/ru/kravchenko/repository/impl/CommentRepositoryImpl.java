@@ -32,7 +32,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     private final Class<?> modelClass;
 
     public CommentRepositoryImpl() {
-        this(DataSource.getConnection());
+        this(new DataSource().getConnection());
     }
 
     public CommentRepositoryImpl(Connection connection) {

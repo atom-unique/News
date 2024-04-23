@@ -32,12 +32,12 @@ public class TagRepositoryImpl implements TagRepository {
     private final Class<?> modelClass;
 
     public TagRepositoryImpl() {
-        this(DataSource.getConnection());
+        this(new DataSource().getConnection());
     }
 
     public TagRepositoryImpl(Connection connection) {
         this.tagMapper = new TagMapperImpl();
-        this.commentRepository = new CommentRepositoryImpl();
+        this.commentRepository = new CommentRepositoryImpl(connection);
         this.connection = connection;
         thisClass = this.getClass();
         modelClass = Tag.class;

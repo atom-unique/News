@@ -34,12 +34,12 @@ public class NewsRepositoryImpl implements NewsRepository {
     private final Class<?> modelClass;
 
     public NewsRepositoryImpl() {
-        this(DataSource.getConnection());
+        this(new DataSource().getConnection());
     }
 
     public NewsRepositoryImpl(Connection connection) {
         this.connection = connection;
-        this.newsMapper = new NewsMapperImpl();
+        this.newsMapper = new NewsMapperImpl(connection);
         thisClass = this.getClass();
         modelClass = News.class;
     }
