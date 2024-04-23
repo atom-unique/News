@@ -5,14 +5,21 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class DataSource {
 
-    private final String APP_CONF = "/datasource.properties";
-    private HikariConfig config = new HikariConfig(APP_CONF);
+    private HikariConfig config;
     private HikariDataSource dataSource;
 
     public DataSource() {
+        this.config = new HikariConfig(
+                Objects.requireNonNull(
+                                Thread.currentThread()
+                                        .getContextClassLoader()
+                                        .getResource("datasource.properties"))
+                        .getPath()
+        );
         this.dataSource = new HikariDataSource(config);
     }
 
